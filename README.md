@@ -10,6 +10,6 @@
 
 ### dotnet run --project src/API
 
-## Iniciar projeto com abre dirento o swagger
+## Iniciar projete, abre dirento o swagger
 
 ### dotnet watch --project src/Api
