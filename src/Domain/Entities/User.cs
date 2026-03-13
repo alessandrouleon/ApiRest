@@ -10,6 +10,7 @@ public class User
     public string PasswordHash { get; private set; } = string.Empty;
     public DateTime CreatedAt { get; private set; }
     public DateTime UpdatedAt { get; private set; }
+    public DateTime? DeletedAt { get; private set; }
 
     private User() { }
 
@@ -34,5 +35,10 @@ public class User
     {
         PasswordHash = passwordHash;
         UpdatedAt = DateTime.UtcNow;
+    }
+
+    public void SoftDelete()
+    {
+        DeletedAt = DateTime.UtcNow;
     }
 }
