@@ -21,12 +21,16 @@ public class CreateUserUseCase
 
     public async Task<UserResponse> ExecuteAsync(CreateUserRequest request)
     {
-        var existing = await _userRepository.GetByEmailAsync(request.Email);
-        if (existing is not null)
+        var existingEmail = await _userRepository.GetByEmailAsync(request.Email);
+        if (existingEmail is not null)
             throw new EmailAlreadyInUseException(request.Email);
 
+        var existingUsername = await _userRepository.GetByUsernameAsync(request.Username);
+        if (existingUsername is not null)
+            throw new UsernameAlreadyInUseException(request.Username);
+
         var passwordHash = _passwordHasher.Hash(request.Password);
-        var user = UserFactory.Create(request.Name, request.Email, passwordHash);
+        var user = UserFactory.Create(request.Name, request.Username, request.Email, request.IsActive, passwordHash);
 
         await _userRepository.AddAsync(user);
 

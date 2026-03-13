@@ -24,11 +24,18 @@ public class UpdateUserUseCase
         var user = await _userRepository.GetByIdAsync(id)
             ?? throw new UserNotFoundException(id);
 
+        if (!user.IsActive)
+            throw new UserInactiveException(id);
+
         var emailInUse = await _userRepository.GetByEmailAsync(request.Email);
         if (emailInUse is not null && emailInUse.Id != id)
             throw new EmailAlreadyInUseException(request.Email);
 
-        user.Update(request.Name, new Email(request.Email));
+        var usernameInUse = await _userRepository.GetByUsernameAsync(request.Username);
+        if (usernameInUse is not null && usernameInUse.Id != id)
+            throw new UsernameAlreadyInUseException(request.Username);
+
+        user.Update(request.Name, request.Username, new Email(request.Email), request.IsActive);
 
         if (request.Password is not null)
         {

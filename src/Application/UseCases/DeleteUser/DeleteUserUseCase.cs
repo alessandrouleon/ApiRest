@@ -17,6 +17,9 @@ public class DeleteUserUseCase
         var user = await _userRepository.GetByIdAsync(id)
             ?? throw new UserNotFoundException(id);
 
+        if (!user.IsActive)
+            throw new UserInactiveException(id);
+
         await _userRepository.DeleteAsync(user);
     }
 }

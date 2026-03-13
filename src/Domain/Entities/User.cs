@@ -6,7 +6,9 @@ public class User
 {
     public Guid Id { get; private set; }
     public string Name { get; private set; } = string.Empty;
+    public string Username { get; private set; } = string.Empty;
     public Email Email { get; private set; } = null!;
+    public bool IsActive { get; private set; } = true;
     public string PasswordHash { get; private set; } = string.Empty;
     public DateTime CreatedAt { get; private set; }
     public DateTime UpdatedAt { get; private set; }
@@ -14,20 +16,24 @@ public class User
 
     private User() { }
 
-    public User(Guid id, string name, Email email, string passwordHash, DateTime createdAt, DateTime updatedAt)
+    public User(Guid id, string name, string username, Email email, bool isActive, string passwordHash, DateTime createdAt, DateTime updatedAt)
     {
         Id = id;
         Name = name;
+        Username = username;
         Email = email;
+        IsActive = isActive;
         PasswordHash = passwordHash;
         CreatedAt = createdAt;
         UpdatedAt = updatedAt;
     }
 
-    public void Update(string name, Email email)
+    public void Update(string name, string username, Email email, bool isActive)
     {
         Name = name;
+        Username = username;
         Email = email;
+        IsActive = isActive;
         UpdatedAt = DateTime.UtcNow;
     }
 

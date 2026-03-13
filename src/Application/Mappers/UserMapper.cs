@@ -9,7 +9,9 @@ public static class UserMapper
     {
         Id = user.Id,
         Name = user.Name,
+        Username = user.Username,
         Email = user.Email.Value,
+        IsActive = user.IsActive,
         CreatedAt = user.CreatedAt,
         UpdatedAt = user.UpdatedAt
     };

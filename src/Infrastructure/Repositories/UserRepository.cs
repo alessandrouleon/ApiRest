@@ -30,6 +30,12 @@ public class UserRepository : IUserRepository
         return await _context.Users.FirstOrDefaultAsync(u => u.Email.Value == normalized && u.DeletedAt == null);
     }
 
+    public async Task<User?> GetByUsernameAsync(string username)
+    {
+        var normalized = username.ToLowerInvariant();
+        return await _context.Users.FirstOrDefaultAsync(u => u.Username.ToLower() == normalized && u.DeletedAt == null);
+    }
+
     public async Task AddAsync(User user)
     {
         await _context.Users.AddAsync(user);
