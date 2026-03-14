@@ -35,7 +35,7 @@ public class UpdateUserUseCase
         if (usernameInUse is not null && usernameInUse.Id != id)
             throw new UsernameAlreadyInUseException(request.Username);
 
-        user.Update(request.Name, request.Username, new Email(request.Email), request.IsActive);
+        user.Update(request.Name, request.Username, new Email(request.Email), request.IsActive, request.Role);
 
         if (request.Password is not null)
         {

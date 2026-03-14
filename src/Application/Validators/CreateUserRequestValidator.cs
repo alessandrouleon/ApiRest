@@ -1,4 +1,5 @@
 using APIRest.Application.DTOs.Requests;
+using APIRest.Domain.Enums;
 using FluentValidation;
 
 namespace APIRest.Application.Validators;
@@ -15,14 +16,17 @@ public class CreateUserRequestValidator : AbstractValidator<CreateUserRequest>
             .NotEmpty().WithMessage("Username is required.")
             .MaximumLength(50).WithMessage("Username must not exceed 50 characters.")
             .Matches(@"^[a-zA-Z0-9_.]+$").WithMessage("Username can only contain letters, numbers, underscores, and dots.");
-      
+
         RuleFor(x => x.Email)
             .NotEmpty().WithMessage("Email is required.")
             .EmailAddress().WithMessage("Invalid email format.")
             .MaximumLength(255).WithMessage("Email must not exceed 255 characters.");
-        
+
         RuleFor(x => x.IsActive)
             .NotNull().WithMessage("IsActive is required.");
+
+        RuleFor(x => x.Role)
+            .IsInEnum().WithMessage("Role must be a valid value.");
 
         RuleFor(x => x.Password)
             .NotEmpty().WithMessage("Password is required.")

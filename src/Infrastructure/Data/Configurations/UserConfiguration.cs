@@ -31,6 +31,10 @@ public class UserConfiguration : IEntityTypeConfiguration<User>
             .IsRequired()
             .HasDefaultValue(true);
 
+        builder.Property(u => u.Role)
+            .IsRequired()
+            .HasConversion<int>();
+
         builder.OwnsOne(u => u.Email, emailNav =>
         {
             emailNav.Property(e => e.Value)

@@ -9,13 +9,20 @@ using APIRest.Domain.Interfaces;
 using APIRest.Infrastructure.Data;
 using APIRest.Infrastructure.Repositories;
 using APIRest.Infrastructure.Security;
+using APIRest.API.Common;
 using APIRest.API.Middlewares;
 using FluentValidation;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.OpenApi.Models;
+using Swashbuckle.AspNetCore.SwaggerGen;
+using System.Text.Json.Serialization;
 
 var builder = WebApplication.CreateBuilder(args);
 
-builder.Services.AddControllers();
+builder.Services.AddControllers()
+    .AddJsonOptions(options =>
+        options.JsonSerializerOptions.Converters.Add(new JsonStringEnumConverter()));
+
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen(options =>
 {
@@ -25,6 +32,9 @@ builder.Services.AddSwaggerGen(options =>
         Version = "v1",
         Description = "RESTful API for User management built with Clean Architecture and DDD."
     });
+    options.UseInlineDefinitionsForEnums();
+    options.UseAllOfToExtendReferenceSchemas();
+    options.SchemaFilter<DefaultValueEnumSchemaFilter>();
 });
 
 builder.Services.AddDbContext<AppDbContext>(options =>

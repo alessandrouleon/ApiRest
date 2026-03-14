@@ -12,6 +12,7 @@ public static class UserMapper
         Username = user.Username,
         Email = user.Email.Value,
         IsActive = user.IsActive,
+        Role = user.Role,
         CreatedAt = user.CreatedAt,
         UpdatedAt = user.UpdatedAt
     };

@@ -30,7 +30,7 @@ public class CreateUserUseCase
             throw new UsernameAlreadyInUseException(request.Username);
 
         var passwordHash = _passwordHasher.Hash(request.Password);
-        var user = UserFactory.Create(request.Name, request.Username, request.Email, request.IsActive, passwordHash);
+        var user = UserFactory.Create(request.Name, request.Username, request.Email, request.IsActive, request.Role, passwordHash);
 
         await _userRepository.AddAsync(user);
 

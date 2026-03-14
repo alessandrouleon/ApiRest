@@ -1,4 +1,5 @@
 using APIRest.Application.DTOs.Requests;
+using APIRest.Domain.Enums;
 using FluentValidation;
 
 namespace APIRest.Application.Validators;
@@ -23,6 +24,9 @@ public class UpdateUserRequestValidator : AbstractValidator<UpdateUserRequest>
 
         RuleFor(x => x.IsActive)
             .NotNull().WithMessage("IsActive is required.");
+
+        RuleFor(x => x.Role)
+            .IsInEnum().WithMessage("Role must be a valid value.");
 
         When(x => x.Password is not null, () =>
         {
