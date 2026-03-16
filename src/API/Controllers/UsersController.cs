@@ -7,12 +7,14 @@ using APIRest.Application.UseCases.FindAllUsers;
 using APIRest.Application.UseCases.FindUserById;
 using APIRest.Application.UseCases.UpdateUser;
 using FluentValidation;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
 namespace APIRest.API.Controllers;
 
 [ApiController]
 [Route("api/[controller]")]
+[Authorize]
 public class UsersController : ControllerBase
 {
     private readonly CreateUserUseCase _createUser;
@@ -42,8 +44,10 @@ public class UsersController : ControllerBase
     }
 
     [HttpPost]
+    [Authorize(Roles = Roles.AdminOrClientAdmin)]
     [ProducesResponseType(typeof(ApiResponse<UserResponse>), StatusCodes.Status201Created)]
     [ProducesResponseType(typeof(ApiResponse<object>), StatusCodes.Status400BadRequest)]
+    [ProducesResponseType(typeof(ApiResponse<object>), StatusCodes.Status403Forbidden)]
     [ProducesResponseType(typeof(ApiResponse<object>), StatusCodes.Status409Conflict)]
     public async Task<IActionResult> Create([FromBody] CreateUserRequest request)
     {
@@ -62,7 +66,9 @@ public class UsersController : ControllerBase
     }
 
     [HttpGet]
+    [Authorize(Roles = Roles.AdminClientAdminOrManager)]
     [ProducesResponseType(typeof(ApiResponse<IEnumerable<UserResponse>>), StatusCodes.Status200OK)]
+    [ProducesResponseType(typeof(ApiResponse<object>), StatusCodes.Status403Forbidden)]
     public async Task<IActionResult> GetAll()
     {
         var users = await _findAllUsers.ExecuteAsync();
@@ -70,7 +76,9 @@ public class UsersController : ControllerBase
     }
 
     [HttpGet("{id:guid}")]
+    [Authorize(Roles = Roles.AdminClientAdminManagerOrLeader)]
     [ProducesResponseType(typeof(ApiResponse<UserResponse>), StatusCodes.Status200OK)]
+    [ProducesResponseType(typeof(ApiResponse<object>), StatusCodes.Status403Forbidden)]
     [ProducesResponseType(typeof(ApiResponse<object>), StatusCodes.Status404NotFound)]
     public async Task<IActionResult> GetById(Guid id)
     {
@@ -79,8 +87,10 @@ public class UsersController : ControllerBase
     }
 
     [HttpPut("{id:guid}")]
+    [Authorize(Roles = Roles.AdminOrClientAdmin)]
     [ProducesResponseType(typeof(ApiResponse<UserResponse>), StatusCodes.Status200OK)]
     [ProducesResponseType(typeof(ApiResponse<object>), StatusCodes.Status400BadRequest)]
+    [ProducesResponseType(typeof(ApiResponse<object>), StatusCodes.Status403Forbidden)]
     [ProducesResponseType(typeof(ApiResponse<object>), StatusCodes.Status404NotFound)]
     [ProducesResponseType(typeof(ApiResponse<object>), StatusCodes.Status409Conflict)]
     public async Task<IActionResult> Update(Guid id, [FromBody] UpdateUserRequest request)
@@ -97,7 +107,9 @@ public class UsersController : ControllerBase
     }
 
     [HttpDelete("{id:guid}")]
+    [Authorize(Roles = Roles.Admin)]
     [ProducesResponseType(typeof(ApiResponse<object>), StatusCodes.Status200OK)]
+    [ProducesResponseType(typeof(ApiResponse<object>), StatusCodes.Status403Forbidden)]
     [ProducesResponseType(typeof(ApiResponse<object>), StatusCodes.Status404NotFound)]
     public async Task<IActionResult> Delete(Guid id)
     {

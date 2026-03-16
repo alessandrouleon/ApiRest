@@ -34,6 +34,7 @@ public class GlobalExceptionMiddleware
         var (statusCode, message) = exception switch
         {
             UserNotFoundException => (StatusCodes.Status404NotFound, exception.Message),
+            InvalidCredentialsException => (StatusCodes.Status401Unauthorized, exception.Message),  //New
             EmailAlreadyInUseException => (StatusCodes.Status409Conflict, exception.Message),
             DomainException => (StatusCodes.Status400BadRequest, exception.Message),
             ArgumentException => (StatusCodes.Status400BadRequest, exception.Message),
